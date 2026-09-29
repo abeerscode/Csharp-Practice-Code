@@ -1,0 +1,25 @@
+## C# Basic Notes
+------------------------------------------------------------------------------
+
+### 1. Print Output
+Console.WriteLine("Hello World");
+Used to print output on the console.
+
+------------------------------------------------------------------------------
+
+### 2. Variable Input
+
+**i. Direct Value Assignment**
+int x = 23;
+Stores the value `23` in variable `x`.
+
+**ii. User Input**
+int num = int.Parse(Console.ReadLine());
+Takes input from the user and converts it from `string` to `int`.
+
+------------------------------------------------------------------------------
+
+### 3. Print with Variable
+Console.WriteLine($"Sum of the two numbers is: {sum}");
+Prints text together with the value of a variable.
+**Remember:** `$` allows variables to be written inside `{ }`.
