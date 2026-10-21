@@ -1,0 +1,167 @@
+C# / ASP.NET Core MVC — Quick Learning Notes
+===============================================
+
+1. List Basics
+--------------
+List<T> stores multiple items of the same type.
+
+Syntax:
+List<int> numbers = new List<int> { 1, 2, 3, 4 };
+- List<int>: a list of integers.
+- numbers: variable holding the list.
+- { 1, 2, 3, 4 }: initial items.
+
+Add an item:
+numbers.Add(5);  // Adds 5 to the list.
+
+Loop through a list:
+foreach (int number in numbers)
+{
+    Console.WriteLine(number);
+}
+- foreach visits each item in the list, one at a time.
+
+2. List of Objects
+------------------
+A list can hold objects of a class, such as Student.
+
+Example:
+List<Student> students = new List<Student>();
+
+Student s1 = new Student();
+s1.Name = "Ratul";
+s1.Id = 23;
+students.Add(s1);
+
+- List<Student>: list that holds Student objects.
+- s1: one Student object.
+- students.Add(s1): adds that object to the list.
+
+Shortcut (object initializer):
+students.Add(new Student
+{
+    Name = "Abeer",
+    Id = 123
+});
+- Creates a Student object, sets its properties, and adds it to the list.
+
+Print object data:
+foreach (Student student in students)
+{
+    Console.WriteLine($"{student.Name} {student.Id}");
+}
+- $ before a string lets us insert values using { }.
+
+3. Properties
+------------
+Example:
+public int Id { get; set; }
+public string Name { get; set; } = "";
+
+- get: allows reading the property.
+- set: allows assigning/changing its value.
+- = "": gives Name an initial empty-string value.
+
+4. Dummy Data in DataAccess
+---------------------------
+StudentData.cs contains sample student records for practice.
+
+Example:
+public List<Student> GetStudents()
+{
+    List<Student> students = new List<Student>();
+
+    students.Add(new Student
+    {
+        Id = 1,
+        Name = "Rahim",
+        Age = 21
+    });
+
+    return students;
+}
+
+- GetStudents() returns a List<Student>.
+- return students sends the list back to the caller.
+- Add more students with more students.Add(new Student { ... }); statements.
+- Dummy data is sample data for practice, not data from a database.
+
+5. Facade
+---------
+StudentFacade.cs:
+public List<Student> GetStudents()
+{
+    StudentData data = new StudentData();
+    return data.GetStudents();
+}
+
+- The Facade calls DataAccess and returns the list.
+- It does not create the dummy records in this example.
+
+6. Controller
+-------------
+StudentController.cs:
+public IActionResult Index()
+{
+    StudentFacade facade = new StudentFacade();
+
+    List<Student> students = facade.GetStudents();
+
+    return View(students);
+}
+
+- StudentFacade facade = new StudentFacade(); creates a Facade object.
+- facade.GetStudents() calls the Facade method.
+- List<Student> students creates a local variable named students and stores the returned list in it.
+- IActionResult is a type used for an MVC action's result.
+- return View(students) sends the list to the View.
+
+Important:
+The variable 'students' is created in the Controller, but the student data comes from DataAccess through the Facade.
+
+7. View
+-------
+The View displays the data passed by the Controller.
+
+Example:
+@model List<Entities.Student>
+
+@foreach (var student in Model)
+{
+    <p>@student.Id - @student.Name - @student.Age</p>
+}
+
+- @model declares the type of data the View expects.
+- Model represents the data passed from the Controller.
+- @foreach loops through the list.
+- @student.Name displays that student's Name.
+
+8. Project Workflow
+-------------------
+Browser requests /Student (the StudentController's Index action).
+    -> StudentController.Index()
+    -> StudentFacade.GetStudents()
+    -> StudentData.GetStudents() creates/returns dummy data
+    -> Facade returns the list
+    -> Controller stores it in 'students'
+    -> return View(students)
+    -> View displays the student records in the browser
+
+Data travels back like this:
+DataAccess -> Facade -> Controller -> View -> Browser
+
+9. Useful Namespaces
+--------------------
+using Entities;       // Student model/entity
+using Facade;         // StudentFacade
+using DataAccess;     // StudentData
+using Microsoft.AspNetCore.Mvc;  // MVC Controller, IActionResult, View()
+
+10. Current Learning Scope
+--------------------------
+- Practiced List<int> and List<Student>.
+- Practiced adding items with Add().
+- Practiced creating and adding objects normally and with object initializer syntax.
+- Practiced properties such as Id, Name, and Age.
+- Followed the dummy-data flow through DataAccess, Facade, Controller, and View.
+- No database or API is involved in this practice flow.
